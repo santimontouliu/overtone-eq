@@ -48,3 +48,7 @@ Equations are pre-rendered from LaTeX with KaTeX 0.19.1, including accessible Ma
 ## Reading the graphs
 
 The graph guide explains time-domain waveforms, frequency-domain line spectra, the logarithmic frequency axis, amplitude levels in dB, original/processed colors, automatic waveform scaling, and EQ gain versus signal level. A live readout follows the fundamental through the EQ, and a one-click experiment cuts the third harmonic of a 250 Hz source.
+
+## Optimized implementation
+
+Upload audio.js and rendering.js alongside app.js, model.js, and presets.js. Rendering uses cached recurrence sampling, pixel envelopes for dense waveforms, and an animation cap of 30 fps. Static charts update only when inputs change. Animation stops for frozen, hidden, or offscreen plots. Audio reuses oscillators for amplitude-only updates and crossfades phase/frequency changes. Fonts use locally bundled WOFF2. No build step is needed.
