@@ -9,3 +9,6 @@
 
 /* Keep label styles outside KaTeX’s internal span layout. */
 .metrics>div{min-width:0}.metrics small{font-size:12px;line-height:1.8}.metrics small .katex{font-size:1em}.metrics .metric-context{display:block;font-size:10px;color:var(--muted);margin-top:5px}
+
+/* Local, keyboard-accessible chart help; each panel opens independently. */
+.plots{align-items:start}.chart-info{border-top:1px solid var(--line);margin:0 20px 16px;padding-top:12px}.chart-info summary{cursor:pointer;color:var(--amber);font-size:11px;font-weight:550;list-style-position:inside;padding:4px 0}.chart-info[open] summary{margin-bottom:12px}.chart-info-body{font-size:12px;line-height:1.8;color:var(--muted);padding-bottom:4px}.chart-info-body h3{font-size:16px;color:var(--ink);margin:0 0 12px}.chart-info-body p{margin:10px 0}.chart-info-body b{color:var(--ink);font-weight:550}.chart-info-body button{font-size:11px;color:var(--amber)}.eq>.chart-info{margin:16px 0}.chart-info .guide-example{margin-top:14px;padding:12px 14px;font-size:11px}.chart-info .guide-math{font-size:12px}
