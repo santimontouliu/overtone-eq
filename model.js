@@ -1,0 +1,8 @@
+/* Steady-state sinusoidal model. RBJ peaking EQ, Q=1.2. */
+const CENTERS=[80,250,750,2000,5000,12000];
+function responseAt(f,gains,sr=48000){let re=1,im=0;for(let j=0;j<gains.length;j++){let A=10**(gains[j]/40),w0=2*Math.PI*CENTERS[j]/sr,alpha=Math.sin(w0)/(2*1.2),w=2*Math.PI*f/sr;let b=[1+alpha*A,-2*Math.cos(w0),1-alpha*A],a=[1+alpha/A,-2*Math.cos(w0),1-alpha/A];let nr=b[0]+b[1]*Math.cos(w)+b[2]*Math.cos(2*w),ni=-b[1]*Math.sin(w)-b[2]*Math.sin(2*w),dr=a[0]+a[1]*Math.cos(w)+a[2]*Math.cos(2*w),di=-a[1]*Math.sin(w)-a[2]*Math.sin(2*w),d=dr*dr+di*di,rr=(nr*dr+ni*di)/d,ii=(ni*dr-nr*di)/d;[re,im]=[re*rr-im*ii,re*ii+im*rr]}return {mag:Math.hypot(re,im),phase:Math.atan2(im,re)}}
+function mergeTones(tones){let map=new Map();for(let t of tones){let z=map.get(t.f)||{re:0,im:0};z.re+=t.a*Math.cos(t.p);z.im+=t.a*Math.sin(t.p);map.set(t.f,z)}return [...map].map(([f,z])=>({f,a:Math.hypot(z.re,z.im)<1e-12?0:Math.hypot(z.re,z.im),p:Math.atan2(z.im,z.re)}))}
+function sourceTones(state){let tones=state.amps.map((a,i)=>({f:state.f*(i+1),a,p:state.phases[i]}));if(state.second)tones.push({f:state.f+state.detune,a:state.secondAmp,p:state.phase*Math.PI/180});return mergeTones(tones)}
+function filteredTones(tones,gains,sr){return tones.map(t=>{let h=responseAt(t.f,gains,sr);return {...t,a:t.a*h.mag,p:t.p+h.phase}})}
+function sample(tones,t){return tones.reduce((sum,o)=>sum+o.a*Math.sin(2*Math.PI*o.f*t+o.p),0)}
+function sourcePreset(name){let amps=Array(8).fill(0),phases=Array(8).fill(0);for(let i=0;i<8;i++){let n=i+1;if(name==='sine')amps[i]=i===0?1:0;if(name==='square')amps[i]=n%2?1/n:0;if(name==='saw')amps[i]=1/n;if(name==='triangle'){amps[i]=n%2?1/n**2:0;phases[i]=n%4===3?Math.PI:0}}return {amps,phases}}
